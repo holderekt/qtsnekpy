@@ -20,8 +20,6 @@ class Snake:
             return tail
 
 
-
-#Singolo quadrato della griglia
 class Box(QWidget):
 
     pal = QPalette()
@@ -30,7 +28,7 @@ class Box(QWidget):
         super().__init__()
         self.x = cx
         self.y = cy
-        self.pal.setColor(QPalette.Background, Qt.green)
+        self.pal.setColor(QPalette.Background, QColor(15,15,15,25))
         self.setAutoFillBackground(True)
         self.setPalette(self.pal)
         self.setFixedSize(10,10)
@@ -40,7 +38,6 @@ class Box(QWidget):
         self.setPalette(self.pal)
 
 
-#Griglia di gioco
 class Grid(QWidget):
 
     gbox = []
@@ -56,16 +53,15 @@ class Grid(QWidget):
     def __init__(self):
         super().__init__()
         self.label = QLabel("Score:")
+        self.setWindowTitle("Snek")
+        self.setFixedSize(620, 350)
         self.lscore = QLabel()
 
-        #Definizione layout
-        gridP = QVBoxLayout(self)   #Layout principale
+        gridP = QVBoxLayout(self)   
         gridH = QHBoxLayout()
-        gridL = QGridLayout()       #Layout della griglia
+        gridL = QGridLayout() 
         gridL.setSpacing(2.5)
 
-
-        #Riempimento della griglia
         row = []
         for i in range(0,25):
             for j in range(0,50):
@@ -80,7 +76,6 @@ class Grid(QWidget):
         gridH.addWidget(self.lscore)
         gridP.addLayout(gridH)
 
-
         self.newFood()
         self.timer.start(100,self)
         self.setLayout(gridP)
@@ -91,30 +86,25 @@ class Grid(QWidget):
             self.label.setText("Pause")
             self.lscore.setText("")
             self.timer.stop()
-        else:
+        else :
             if(not self.timer.isActive()):
                 self.timer.start(100,self)
                 self.label.setText("Score")
                 self.lscore.setText(str(self.score))
-            self.key_pressed = event.key()
-
+            if(event.key() in [Qt.Key_Left, Qt.Key_Right, Qt.Key_Down, Qt.Key_Up]):
+            	self.key_pressed = event.key()
 
     def timerEvent(self, event):
         if(self.timer.isActive()):
             self.move()
             self.lscore.setText(str(self.score))
 
-
     def newFood(self):
         self.food = [rand.randint(0,24),rand.randint(0,49)]
         self.gbox[self.food[0]][self.food[1]].changeColor(Qt.red)
 
-
-    #TODO Ridefinire
-    def direction(self):
-            pass
-
     def move(self):
+
         if self.key_pressed == Qt.Key_Up:
             self.cur_x = self.cur_x-1
         elif self.key_pressed == Qt.Key_Down:
@@ -123,7 +113,6 @@ class Grid(QWidget):
             self.cur_y = self.cur_y-1
         elif self.key_pressed == Qt.Key_Right:
             self.cur_y = self.cur_y+1
-
 
         eat = False
 
@@ -152,11 +141,9 @@ class Grid(QWidget):
 
         tail = self.snake.eat(eat)
         if(eat is False):
-            self.gbox[tail[0]][tail[1]].changeColor(Qt.green)
+            self.gbox[tail[0]][tail[1]].changeColor(QColor(63, 191, 63, 255))
 
 
 app = QApplication(sys.argv)
 griglia = Grid()
-
-
 sys.exit(app.exec_())
