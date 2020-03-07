@@ -54,7 +54,7 @@ class Grid(QWidget):
         super().__init__()
         self.label = QLabel("Score:")
         self.setWindowTitle("Snek")
-        self.setFixedSize(620, 350)
+        self.setFixedSize(350, 350)
         self.lscore = QLabel()
 
         gridP = QVBoxLayout(self)   
@@ -64,7 +64,7 @@ class Grid(QWidget):
 
         row = []
         for i in range(0,25):
-            for j in range(0,50):
+            for j in range(0,25):
                 element = Box(i,j)
                 row.append(element)
                 gridL.addWidget(row[j],i,j)
@@ -100,7 +100,7 @@ class Grid(QWidget):
             self.lscore.setText(str(self.score))
 
     def newFood(self):
-        self.food = [rand.randint(0,24),rand.randint(0,49)]
+        self.food = [rand.randint(0,24),rand.randint(0,24)]
         self.gbox[self.food[0]][self.food[1]].changeColor(Qt.red)
 
     def move(self):
@@ -115,23 +115,25 @@ class Grid(QWidget):
             self.cur_y = self.cur_y+1
 
         eat = False
-
+        
         if([self.cur_x,self.cur_y] in self.snake.body):
             self.timer.stop()
             msg = QMessageBox()
-            msg.setText("Hai perso")
+            msg.setText("You Lose")
             msg.exec_()
             app.quit()
 
+        
         self.snake.move([self.cur_x,self.cur_y])
-        if(self.cur_x == -1 or self.cur_y == -1 or self.cur_x == 25 or self.cur_y == 50):
+        
+        if(self.cur_x == -1 or self.cur_y == -1 or self.cur_x == 25 or self.cur_y ==25):
             self.timer.stop()
             msg = QMessageBox()
-            msg.setText("Hai perso")
+            msg.setText("You Lose")
             msg.exec_()
             app.quit()
         else:
-            self.gbox[self.cur_x][self.cur_y].changeColor(Qt.black)
+            self.gbox[self.cur_x][self.cur_y].changeColor(QColor(0,150,69,127))
 
 
         if([self.cur_x,self.cur_y] == self.food):
@@ -141,7 +143,8 @@ class Grid(QWidget):
 
         tail = self.snake.eat(eat)
         if(eat is False):
-            self.gbox[tail[0]][tail[1]].changeColor(QColor(63, 191, 63, 255))
+            self.gbox[tail[0]][tail[1]].changeColor(QColor(15,15,15,25))
+    
 
 
 app = QApplication(sys.argv)
